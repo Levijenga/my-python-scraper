@@ -32,5 +32,13 @@ jobs:
             echo "No requirements file found; skipping dependency install."
           fi
 
+      - name: Install Playwright browser
+        run: |
+          if python -c "import importlib.util, sys; sys.exit(0 if importlib.util.find_spec('playwright') else 1)"; then
+            python -m playwright install --with-deps chromium
+          else
+            echo "Playwright not installed; skipping browser install."
+          fi
+
       - name: Run scraper
         run: python car_scraper.py
