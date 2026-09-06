@@ -2,8 +2,12 @@ name: Scraper
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '2,7,12,17,22,27,32,37,42,47,52,57 * * * *'   # every 5 minutes, offset by 2 minutes (UTC)
   workflow_dispatch:
+
+concurrency:
+  group: scraper
+  cancel-in-progress: false
 
 jobs:
   run:
@@ -12,7 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
