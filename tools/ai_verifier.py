@@ -10,6 +10,7 @@ Applies a deep multi-point forensic audit:
   6. Exact Model & Spec Tier (detects lower-tier brushed vs Fuel, 12V vs 20V/60V, standard vs industrial)
 """
 
+import os
 import json
 import logging
 import re
