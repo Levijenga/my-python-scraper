@@ -1,4 +1,4 @@
-name: Scraper
+name: Scrapers
 
 on:
   schedule:
@@ -13,48 +13,97 @@ permissions:
   contents: write
 
 jobs:
-  run:
+  cars:
+    name: Kijiji Car Scraper
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Restore seen listings cache
+      - name: Restore cars seen listings cache
         uses: actions/cache/restore@v4
         with:
-          path: seen_listings.json
-          key: seen-listings-${{ github.run_id }}
+          path: cars/seen_listings.json
+          key: cars-seen-${{ github.run_id }}
           restore-keys: |
-            seen-listings-
+            cars-seen-
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Extract scraper files
-        run: unzip -q -o scraper.zip
-
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r cars/requirements.txt
 
       - name: Install Playwright browsers
         run: python -m playwright install --with-deps chromium
 
-      - name: Run scraper
+      - name: Run car scraper
+        working-directory: ./cars
         run: python car_scraper.py
 
-      - name: Save seen listings cache
+      - name: Save cars seen listings cache
         uses: actions/cache/save@v4
         if: always()
         with:
-          path: seen_listings.json
-          key: seen-listings-${{ github.run_id }}
+          path: cars/seen_listings.json
+          key: cars-seen-${{ github.run_id }}
 
-      - name: Commit seen listings to repository
+      - name: Commit cars seen listings to repository
         continue-on-error: true
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add seen_listings.json
-          git diff --staged --quiet || (git commit -m "Update seen listings [skip ci]" && git push)
+          git add cars/seen_listings.json
+          git diff --staged --quiet || (git commit -m "Update cars seen listings [skip ci]" && git push)
+
+  tools:
+    name: Kijiji Tool Arbitrage Radar
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Restore tools tracker database cache
+        uses: actions/cache/restore@v4
+        with:
+          path: tools/kijiji_tracker.db
+          key: tools-db-${{ github.run_id }}
+          restore-keys: |
+            tools-db-
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tools/requirements.txt
+
+      - name: Run tool radar
+        working-directory: ./tools
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python main.py --once
+
+      - name: Save tools tracker database cache
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: tools/kijiji_tracker.db
+          key: tools-db-${{ github.run_id }}
+
+      - name: Commit tools database to repository
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tools/kijiji_tracker.db
+          git diff --staged --quiet || (git commit -m "Update tools tracker database [skip ci]" && git push)

@@ -1,0 +1,70 @@
+{
+  "search": {
+    "city": "winnipeg",
+    "location_id": "1700192",
+    "radius_km": 20.0,
+    "latitude": 49.895136,
+    "longitude": -97.138374,
+    "categories": [
+      {
+        "name": "Tools",
+        "category_id": "110",
+        "path": "b-tool"
+      },
+      {
+        "name": "Electronics",
+        "category_id": "15",
+        "path": "b-electronics"
+      },
+      {
+        "name": "Buy & Sell (All)",
+        "category_id": "108",
+        "path": "b-buy-sell"
+      }
+    ],
+    "max_pages_per_category": 3,
+    "request_delay_seconds": 3.5
+  },
+  "financials": {
+    "min_roi_percent": 75.0,
+    "ebay_fee_percent": 13.25,
+    "conservative_discount_percent": 10.0,
+    "shipping_reserve_usd": 15.0,
+    "fallback_usd_cad_rate": 1.36,
+    "exchange_rate_cache_hours": 24
+  },
+  "condition_scoring": {
+    "min_alert_score": 40,
+    "hot_threshold": 85,
+    "good_threshold": 70,
+    "verify_threshold": 40
+  },
+  "matching": {
+    "min_fuzzy_score": 75
+  },
+  "ai_verification": {
+    "enabled": true,
+    "api_key": "",
+    "model": "gemini-2.5-flash",
+    "min_confidence": 75,
+    "strict_brand_check": true
+  },
+  "notifications": {
+    "discord_webhook_url": "",
+    "enable_discord": false,
+    "enable_email": true,
+    "gmail_address": "jengaleviosa@gmail.com",
+    "gmail_app_password": "ratv saoj wdzs pajo",
+    "notify_emails": [
+      "jengaleviosa@gmail.com"
+    ],
+    "console_output": true
+  },
+  "database": {
+    "excel_path": "combined_deduplicated_electronic_tools_scraper_dataset_v7_375_targets.xlsx",
+    "sqlite_path": "kijiji_tracker.db"
+  },
+  "scheduler": {
+    "interval_seconds": 300
+  }
+}
