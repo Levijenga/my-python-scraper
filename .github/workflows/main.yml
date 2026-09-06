@@ -2,7 +2,7 @@ name: Scraper
 
 on:
   schedule:
-    - cron: '*/5 * * * *'   # every 5 minutes (minimum supported)
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -12,13 +12,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
+      - name: Extract scraper files
+        run: unzip -q scraper.zip
+
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Install Playwright browsers
+        run: python -m playwright install --with-deps chromium
 
       - name: Run scraper
         run: python car_scraper.py
