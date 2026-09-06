@@ -16,8 +16,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Unzip scraper package
+        run: unzip -o scraper.zip
+
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r files/requirements.txt
 
       - name: Run scraper
-        run: python car_scraper.py.py
+        run: python car_scraper.py
